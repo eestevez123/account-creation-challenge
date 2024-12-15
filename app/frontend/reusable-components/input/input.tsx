@@ -1,13 +1,17 @@
 import React, { ChangeEvent, useState } from 'react';
 
 interface Props {
+  type: string;
   label: string;
+  placeholder: string;
   onChange?: (value: string) => void;
 }
 
-export function Input({ onChange, label }: Props) {
+const buttonClass = "w-full border-b border-gray-300 focus:outline-none focus:border-indigo-600 p-2";
+
+export function Input({ onChange, label, type, placeholder }: Props) {
   const [value, setValue] = useState('');
-  const id = label.replace(/ /gm, '_');
+  const id = label.toLowerCase().replace(/ /gm, '_');
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setValue(event.target.value);
@@ -18,8 +22,10 @@ export function Input({ onChange, label }: Props) {
       <label className="block text-sm">{label}</label>
       <input
         id={id}
-        className="block w-full p-2 border-4 border-solid border-slate-300"
+        type={type}
+        className={buttonClass}
         value={value}
+        placeholder={placeholder}
         onChange={handleChange}
       />
     </div>
