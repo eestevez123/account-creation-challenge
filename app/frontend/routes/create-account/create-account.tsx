@@ -16,6 +16,7 @@ export function CreateAccount () {
   const [password, setPassword] = useState('');
   const [passwordScore, setPasswordScore] = useState<number>(0);
   const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
+  const [globalError, setGlobalError] = useState<string>('');
   const navigate = useNavigate(); 
 
   /**
@@ -25,9 +26,9 @@ export function CreateAccount () {
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission
-
+    setGlobalError('');
     const newErrors = validateAccountInput(username, password, passwordScore); // Use front-end validation before we create the API call to create the account
-        setErrors(newErrors);
+    setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
       // All input is acceptable!
@@ -40,12 +41,23 @@ export function CreateAccount () {
         navigate('/signup/account-selection');
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          const { responseErrors } = error.response.data;
+          const responseErrors:{usernameErrors?: string[], passwordErrors?: string[]} = error.response.data.errors;
+
           console.log("An API error occurred while attempting to create the account.");
-          console.log(responseErrors);
+          const newAPIErrors: { username?: string; password?: string } = {};
+
+          if (responseErrors?.usernameErrors) {
+            newAPIErrors.username = responseErrors.usernameErrors.join(' ');
+          }
+          if (responseErrors?.passwordErrors) {
+            newAPIErrors.password = responseErrors.passwordErrors.join(' ');
+          }
+          setErrors(newAPIErrors);
+        } else {
+          // an error occurred while attempting to make the POST request!
+          console.log("An expected error occurred while attempting to create the account.");
+          setGlobalError('An expected error occurred while attempting to create the account. Please try again later.');
         }
-        // an error occurred while attempting to make the POST request!
-        console.log("An expected error occurred while attempting to create the account.");
       }
     }
   };
@@ -65,6 +77,13 @@ export function CreateAccount () {
             </h1>
           </div>
 
+          {globalError && (
+          <div className="text-center mb-4">
+            <h3 className="text-red-500 mt-1">{globalError}</h3>
+          </div>
+          )}
+
+          
           {/* Username Field */}
             <Input
             label="Username"
