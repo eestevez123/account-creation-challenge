@@ -7,6 +7,7 @@ import { Deposit } from './routes/signup/deposit/deposit.tsx';
 import { JointAccess } from './routes/signup/joint-access/joint-access.tsx';
 import { StockRestrictions } from './routes/signup/stock-restrictions/stock-restrictions.tsx';
 import { CreateAccount } from './routes/create-account/create-account.tsx'
+import { Logout } from './routes/logout/logout.tsx';
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,10 @@ const router = createBrowserRouter([
   {
     path: '/create-account',
     element: <CreateAccount />,
-  }
+  },{
+    path: '/logout',
+    element: <Logout />, // Redirect to root or desired page
+  },
 ]);
 
 export function Router() {

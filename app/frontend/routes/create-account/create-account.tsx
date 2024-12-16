@@ -2,17 +2,27 @@ import React, { useState } from 'react';
 import { Input } from '../../reusable-components/input/input';
 import { Button } from '../../reusable-components/button/button';
 import { Card } from '../../reusable-components/card/card';
+import { useNavigate } from 'react-router-dom';
 import { PasswordStrengthIndicator } from 'app/frontend/reusable-components/password-strength-indicator/password-strength-indicator';
 
+/**
+ * Create Account component
+ */
 export function CreateAccount () {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordScore, setPasswordScore] = useState<number>(0);
   const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
+  const navigate = useNavigate(); 
 
   // Regex to ensure at least 1 letter and 1 number
   const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)/;
 
+  /**
+   * Handle Account Creation Form submission
+   * 
+   * @param e Form Event
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -23,9 +33,15 @@ export function CreateAccount () {
         // All input is acceptable!
         console.log('Form Submitted', { username, password });
         alert('Account created successfully!');
+        navigate('/signup/account-selection');
     }
   };
 
+  /**
+   * Validates the username and password from the form
+   * 
+   * @returns newErrors Error messages object
+   */
   const validateAccountInput = () => {
     const newErrors: { username?: string; password?: string } = {};
 
