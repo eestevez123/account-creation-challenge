@@ -5,6 +5,8 @@ import { Card } from '../../reusable-components/card/card';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { PasswordStrengthIndicator } from 'app/frontend/reusable-components/password-strength-indicator/password-strength-indicator';
+import { validateAccountInput} from 'app/frontend/utils/validation.ts';
+import AccountService from 'app/frontend/api/AccountService';
 
 /**
  * Create Account component
@@ -16,9 +18,6 @@ export function CreateAccount () {
   const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
   const navigate = useNavigate(); 
 
-  // Regex to ensure at least 1 letter and 1 number
-  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)/;
-
   /**
    * Handle Account Creation Form submission
    * 
@@ -27,15 +26,13 @@ export function CreateAccount () {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission
 
-    const newErrors = validateAccountInput(); // Use front-end validation before we create the API call to create the account
+    const newErrors = validateAccountInput(username, password, passwordScore); // Use front-end validation before we create the API call to create the account
         setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
       // All input is acceptable!
       try {
-        const response = await axios.post('/api/create-account', {
-          username, password
-        });
+        const response = await AccountService.createAccount(username, password);
 
         // Account Created! - Axios throws an error if the req status is not 2XX
         console.log(response.data);
@@ -52,64 +49,6 @@ export function CreateAccount () {
       }
     }
   };
-
-  /**
-   * Validates the username and password from the form
-   * 
-   * @returns newErrors Error messages object
-   */
-  const validateAccountInput = () => {
-    const newErrors: { username?: string; password?: string } = {};
-
-    // Validate username
-    if (!username.trim()) {
-        newErrors.username = 'Username cannot be empty.';
-    } else {
-        // username exists
-        // The username is >= 10 characters, and <= 50 characters
-        const lengthError = checkLengthReq(username, 'Username', 10, 50);
-        if (lengthError) {
-            newErrors.username = lengthError;
-        }
-    }
-  
-    // Validate password
-    if (!password.trim()) {
-        newErrors.password = 'Password cannot be empty.';
-    } else {
-        // password exists
-        // The password is >= 20 characters, and <= 50 characters
-        const lengthError = checkLengthReq(password, 'Password', 20, 50);
-        if (lengthError) {
-            newErrors.password = lengthError;
-        } else if (!passwordRegex.test(password)) {
-            // Contains at least 1 letter (a-zA-Z) and 1 number (0-9)
-            newErrors.password = 'Password must contain at least one letter and one number.';
-        } else if (passwordScore < 2) {
-            // The password has a Zxcvbn score >= 2.
-            newErrors.password = 'Password is too weak. Please use a stronger password.';
-        }
-    }
-
-      return newErrors;
-  }
-
-  /**
-   * Check length requirements for the given field
-   * @param input 
-   * @param fieldName 
-   * @param min 
-   * @param max 
-   * @returns 
-   */
-  const checkLengthReq = (input:string, fieldName:string, min:number | null , max:number | null) => {
-    if (min && input.length < min) {
-        return `${fieldName} should be greater than ${min} characters`;
-    } else if (max && input.length > max) {
-        return `${fieldName} should be less than ${max} characters`;
-    }
-    return '';
-  }
 
   return (
     <div className="flex items-center justify-center min-h-screen">
