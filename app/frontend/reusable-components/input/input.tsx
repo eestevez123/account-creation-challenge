@@ -3,16 +3,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
-  type: string;
+  type?: string;
   label: string;
-  placeholder: string;
+  placeholder?: string;
   showPasswordToggle?: boolean;
   onChange?: (value: string) => void;
 }
 
 const buttonClass = "w-full border-b border-gray-300 focus:outline-none focus:border-indigo-600 p-2";
 
-export function Input({ onChange, label, type, placeholder, showPasswordToggle=false }: Props) {
+export function Input({ onChange, label, type='text', placeholder, showPasswordToggle=false }: Props) {
   const [value, setValue] = useState('');
   const id = label.toLowerCase().replace(/ /gm, '_');
 

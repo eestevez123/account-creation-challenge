@@ -4,9 +4,9 @@ import { Button } from '../../reusable-components/button/button';
 import { Card } from '../../reusable-components/card/card';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { PasswordStrengthIndicator } from 'app/frontend/reusable-components/password-strength-indicator/password-strength-indicator';
-import { validateAccountInput} from 'app/frontend/utils/validation.ts';
-import AccountService from 'app/frontend/api/AccountService';
+import { PasswordStrengthIndicator } from '../../reusable-components/password-strength-indicator/password-strength-indicator';
+import { validateAccountInput} from '../../utils/validation';
+import AccountService from '../../api/AccountService';
 
 /**
  * Create Account component
