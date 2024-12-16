@@ -12,12 +12,22 @@ interface PasswordStrengthIndicatorProps {
  * 
  */
 export function PasswordStrengthIndicator({ password, onScoreChange }: PasswordStrengthIndicatorProps) {
-    const [passwordScore, setPasswordScore] = useState<number>(0);
-    const [strengthFeedback, setStrengthFeedback] = useState<string>('');
+  const [debouncedPassword, setDebouncedPassword] = useState(password);
+  const [passwordScore, setPasswordScore] = useState<number>(0);
+  const [strengthFeedback, setStrengthFeedback] = useState<string>('');
+
+  // Debounce the password input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedPassword(password); // Update the debounced password
+    }, 500); // Debounce delay (500ms)
+
+    return () => clearTimeout(timer); // Cleanup the timer on each render
+  }, [password]);
 
   useEffect(() => {
-    if (password) {
-      const result = zxcvbn(password); // Evaluate password strength
+    if (debouncedPassword) {
+      const result = zxcvbn(debouncedPassword); // Evaluate password strength
 
       setPasswordScore(result.score);
       setStrengthFeedback(
@@ -33,7 +43,7 @@ export function PasswordStrengthIndicator({ password, onScoreChange }: PasswordS
         // Reset score to 0 when the input is cleared
         onScoreChange?.(0);
     }
-  }, [password, onScoreChange]);
+  }, [debouncedPassword, onScoreChange]);
 
   if (!password) return null; // Don't render anything if no password is entered
 
