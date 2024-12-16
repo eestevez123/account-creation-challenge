@@ -1,32 +1,70 @@
-require "test_helper"
+require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
+  # Test username presence validation
   test "should not save user without username" do
-    user = User.new(password: '123')
-    assert_not user.save
+    user = User.new(password: 'StrongPassword1234567890')
+    assert_not user.valid?, "User should not be valid without a username"
+    assert_includes user.errors[:username], "Username is required"
   end
 
+  # Test username length validations
+  test "should not save user with username shorter than 10 characters" do
+    user = User.new(username: '123456789', password: 'StrongPassword1234567890')
+    assert_not user.valid?, "User should not be valid with short username"
+    assert_includes user.errors[:username], "Username must be at least 10 characters long"
+  end
+
+  test "should not save user with username longer than 50 characters" do
+    long_username = 'a' * 51
+    user = User.new(username: long_username, password: 'StrongPassword1234567890')
+    assert_not user.valid?, "User should not be valid with long username"
+    assert_includes user.errors[:username], "Username must be less than 50 characters"
+  end
+
+  test "should save user with username between 10 and 50 characters" do
+    valid_username = '1234567890'
+    user = User.new(username: valid_username, password: 'StrongPassword1234567890')
+    assert user.valid?, "User should be valid with a username between 10 and 50 characters"
+  end
+
+  # Test username uniqueness validation
+  test "should not save user with duplicate username" do
+    User.create!(username: 'uniqueusername', password: 'StrongPassword1234567890')
+    duplicate_user = User.new(username: 'uniqueusername', password: 'AnotherStrongPassword1234567890')
+    assert_not duplicate_user.valid?, "User should not be valid with duplicate username"
+    assert_includes duplicate_user.errors[:username], "Username is already taken"
+  end
+
+  # Test password presence validation
   test "should not save user without password" do
-    user = User.new(username: '123')
-    assert_not user.save
+    user = User.new(username: 'validusername')
+    assert_not user.valid?, "User should not be valid without a password"
+    assert_includes user.errors[:password], "Password is required"
   end
 
-  test "should save user" do
-    user = User.new(username: '123', password: '123')
-    assert user.save
+  # Test password length validations
+  test "should not save user with password shorter than 20 characters" do
+    user = User.new(username: 'validusername', password: 'short')
+    assert_not user.valid?, "User should not be valid with short password"
+    assert_includes user.errors[:password], "Password must be at least 20 characters long"
   end
 
-  test "should validate username" do
-    assert_not User.validate_username('123456789'), "< 10"
-    assert User.validate_username('1234567890'), ">= 10"
-    assert User.validate_username('12345678901234567890123456789012345678901234567890'), "<= 50"
-    assert_not User.validate_username('123456789012345678901234567890123456789012345678901'), "> 50"
+  test "should not save user with password longer than 50 characters" do
+    long_password = 'a' * 51
+    user = User.new(username: 'validusername', password: long_password)
+    assert_not user.valid?, "User should not be valid with long password"
+    assert_includes user.errors[:password], "Password must be less than 50 characters"
   end
 
-  test "should validate password" do
-    assert_not User.validate_password('123456789012345678a'), "< 20"
-    assert User.validate_password('1234567890123456789a'), ">= 20"
-    assert User.validate_password('1234567890123456789012345678901234567890123456789a'), "<= 50"
-    assert_not User.validate_password('123456789012345678901234567890123456789012345678901a'), "> 50"
+  # Test password complexity validation
+  test "should not save user without letter and number in password" do
+    user = User.new(username: 'validusername', password: 'passwordonly')
+    assert_not user.valid?, "User should not be valid without a number in password"
+    assert_includes user.errors[:password], "Password must contain at least one letter and one number"
+
+    user.password = '1234567890'
+    assert_not user.valid?, "User should not be valid without a letter in password"
+    assert_includes user.errors[:password], "Password must contain at least one letter and one number"
   end
 end
