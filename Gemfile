@@ -21,7 +21,6 @@ gem "importmap-rails", "1.2.1"
 
 gem 'zxcvbn', '0.1.9'
 
-
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails", "1.4.0"
 
@@ -39,6 +38,8 @@ gem "tzinfo-data", "1.2023.3", platforms: %i[ mingw mswin x64_mingw jruby ]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", "1.16.0", require: false
+
+gem 'bcrypt', '~> 3.1.7'
 
 # Use Sass to process CSS
 # gem "sassc-rails"

@@ -3,6 +3,7 @@ import { Input } from '../../reusable-components/input/input';
 import { Button } from '../../reusable-components/button/button';
 import { Card } from '../../reusable-components/card/card';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { PasswordStrengthIndicator } from 'app/frontend/reusable-components/password-strength-indicator/password-strength-indicator';
 
 /**
@@ -23,17 +24,32 @@ export function CreateAccount () {
    * 
    * @param e Form Event
    */
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Prevent default form submission
 
-    const newErrors = validateAccountInput();
-    setErrors(newErrors);
+    const newErrors = validateAccountInput(); // Use front-end validation before we create the API call to create the account
+        setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-        // All input is acceptable!
-        console.log('Form Submitted', { username, password });
-        alert('Account created successfully!');
+      // All input is acceptable!
+      try {
+        const response = await axios.post('/api/create-account', {
+          username, password
+        });
+
+        // Account Created! - Axios throws an error if the req status is not 2XX
+        console.log(response.data);
+        // Redirect to /signup/account-selection
         navigate('/signup/account-selection');
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          const { responseErrors } = error.response.data;
+          console.log("An API error occurred while attempting to create the account.");
+          console.log(responseErrors);
+        }
+        // an error occurred while attempting to make the POST request!
+        console.log("An expected error occurred while attempting to create the account.");
+      }
     }
   };
 
