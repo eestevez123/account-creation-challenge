@@ -13,3 +13,11 @@
  *= require_tree .
  *= require_self
  */
+body {
+  background-color: #fafafa;
+  margin: 0; /* Remove default margin */
+  height: 100%; /* Ensure full viewport height */
+}
+html {
+  height: 100%; /* Ensures full-page height */
+}

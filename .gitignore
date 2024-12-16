@@ -46,3 +46,6 @@ node_modules
 
 .eslintcache
 .vite
+
+# VS Code files for the workspace
+/.vscode/*
