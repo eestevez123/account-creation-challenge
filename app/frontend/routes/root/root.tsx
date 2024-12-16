@@ -1,8 +1,13 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { FlowLayout } from '../../reusable-components/flow-layout/flow-layout.tsx';
 
 export function Root() {
   return (
-    <Navigate to="/create-account" replace />
+    <FlowLayout>
+      <Link to="/signup/account-selection" className="text-xl">
+        Get started
+      </Link>
+    </FlowLayout>
   );
 }
