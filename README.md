@@ -26,6 +26,34 @@ links below for more information.
 - [Testing Rails Applications](https://guides.rubyonrails.org/testing.html)
 - [React Testing Library](https://testing-library.com/docs/react-testing-library/example-intro)
 
+## Noteworthy improvements
+
+### 1. Secure Password Storage
+
+- Implemented password hashing using bcrypt to ensure user passwords are securely stored in the database.
+
+### 2. Enhanced Form Validation
+
+- Added client-side validation to provide immediate feedback to users for improved usability.
+- Integrated the Zxcvbn library to ensure strong password requirements with real-time strength feedback.
+- Introduced a debounce timeout to delay password strength evaluation, reducing unnecessary processing on every keystroke.
+
+### 3. User-Friendly Error Messaging
+
+- Designed clear and concise error messages to guide users through form correction.
+
+### 4. Added Toggle Password Visibility Feature
+
+- Implemented a visibility toggle button for password input fields, allowing users to view or hide their password as needed.
+- Enhances user experience by reducing errors during password entry, especially for complex passwords.
+- Ensured that the toggle functionality maintains security, defaulting to hidden mode and not compromising password safety.
+- Incorporated accessible labels and icons to ensure the feature is intuitive and usable for all users, including those with assistive technologies.
+
+### 5. Leveraged Rails' Automatic Input Validation
+
+- Utilized Rails' built-in validations to ensure robust server-side input checking for the account creation form.
+- Applied validates methods directly on the User model to enforce constraints such as username and password length, and format requirements (e.g., presence of letters and numbers).
+
 ## Versions
 
 ```
@@ -144,31 +172,3 @@ npm run r_test
 ```bash
 npm run all_tests
 ```
-
-## Noteworthy improvements
-
-### 1. Secure Password Storage
-
-- Implemented password hashing using bcrypt to ensure user passwords are securely stored in the database.
-
-### 2. Enhanced Form Validation
-
-- Added client-side validation to provide immediate feedback to users for improved usability.
-- Integrated the Zxcvbn library to ensure strong password requirements with real-time strength feedback.
-- Introduced a debounce timeout to delay password strength evaluation, reducing unnecessary processing on every keystroke.
-
-### 3. User-Friendly Error Messaging
-
-- Designed clear and concise error messages to guide users through form correction.
-
-### 4. Added Toggle Password Visibility Feature
-
-- Implemented a visibility toggle button for password input fields, allowing users to view or hide their password as needed.
-- Enhances user experience by reducing errors during password entry, especially for complex passwords.
-- Ensured that the toggle functionality maintains security, defaulting to hidden mode and not compromising password safety.
-- Incorporated accessible labels and icons to ensure the feature is intuitive and usable for all users, including those with assistive technologies.
-
-### 5. Leveraged Rails' Automatic Input Validation
-
-- Utilized Rails' built-in validations to ensure robust server-side input checking for the account creation form.
-- Applied validates methods directly on the User model to enforce constraints such as username and password length, and format requirements (e.g., presence of letters and numbers).
