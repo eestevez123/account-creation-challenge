@@ -1,5 +1,6 @@
 class Api::AccountsController < ApiController
     skip_before_action :verify_authenticity_token
+    wrap_parameters false # Disable automatic wrapping
     include Api::AccountsHelper # Include the helper
   
     def create
